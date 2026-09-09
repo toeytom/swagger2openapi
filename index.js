@@ -20,6 +20,7 @@ const sw = require('oas-schema-walker');
 const common = require('oas-kit-common');
 
 const statusCodes = require('./lib/statusCodes.js').statusCodes;
+const sampler = require('openapi-sampler');
 
 const ourVersion = require('./package.json').version;
 
@@ -1262,6 +1263,36 @@ function main(openapi, options) {
         delete openapi.components;
     }
 
+    if (options.examples) generateResponseExamples(openapi, options);
+
+    return openapi;
+}
+
+// Generate a response example from the schema wherever the source definition
+// did not supply one. Runs as a post-pass over the finished OAS3 document so
+// that $refs already point at #/components/schemas and can be sampled.
+function generateResponseExamples(openapi, options) {
+    for (let container of [openapi.paths, openapi['x-ms-paths']]) {
+        for (let p in container) {
+            for (let m in container[p]) {
+                const responses = container[p][m] && container[p][m].responses;
+                for (let r in responses || {}) {
+                    for (let mimetype in responses[r].content || {}) {
+                        let mediaType = responses[r].content[mimetype];
+                        if (!mediaType.schema) continue;
+                        if (mediaType.example || mediaType.examples) continue;
+                        try {
+                            mediaType.example = sampler.sample(mediaType.schema, {}, openapi);
+                        }
+                        catch (ex) {
+                            // an unsamplable schema must not fail an otherwise good conversion
+                            console.warn('Could not generate example for ' + m + ' ' + p + ' ' + r + ': ' + ex.message);
+                        }
+                    }
+                }
+            }
+        }
+    }
     return openapi;
 }
 

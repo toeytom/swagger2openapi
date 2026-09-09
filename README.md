@@ -38,6 +38,8 @@ Options:
   -c, --components     output information to unresolve a definition    [boolean]
   -d, --debug          enable debug mode, adds specification-extensions[boolean]
   -e, --encoding       encoding for input/output files[string] [default: "utf8"]
+  --examples           generate response examples from schemas where none are
+                       supplied                                        [boolean]
   -f, --fatal          make resolution errors fatal                    [boolean]
   -h, --help           Show help                                       [boolean]
   -i, --indent         JSON indent to use, defaults to 4 spaces         [string]
@@ -63,6 +65,7 @@ const converter = require('swagger2openapi');
 let options = {};
 //options.patch = true; // fix up small errors in the source definition
 //options.warnOnly = true; // Do not throw on non-patchable errors
+//options.examples = true; // generate response examples from schemas where none are supplied
 converter.convertObj(swagger, options, function(err, options){
   // options.openapi contains the converted definition
 });
