@@ -117,6 +117,58 @@ Options:
   -y, --yaml        skip YAML-safe test                                [boolean]
 ```
 
+### Response example generation
+
+With `--examples` (or `options.examples = true`), any response media type that ends up with a
+`schema` but no `example`/`examples` gets an example sampled from that schema, via
+[openapi-sampler](https://github.com/Redocly/openapi-sampler). `$ref`s to
+`#/components/schemas` are followed and recursive schemas terminate safely. Examples already
+present in the source definition (Swagger 2.0 `response.examples`) are never overwritten, and
+the option is off by default so existing output is unchanged.
+
+Given this Swagger 2.0 input:
+
+```yaml
+paths:
+  /pets:
+    get:
+      produces: [application/json]
+      responses:
+        '200':
+          description: a pet
+          schema:
+            $ref: '#/definitions/Pet'
+definitions:
+  Pet:
+    type: object
+    properties:
+      id: { type: integer, format: int64 }
+      name: { type: string, example: Fido }
+      tags:
+        type: array
+        items: { type: string }
+```
+
+`swagger2openapi --examples -y swagger.yaml` produces:
+
+```yaml
+paths:
+  /pets:
+    get:
+      responses:
+        "200":
+          description: a pet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+              example:            # <-- added by --examples
+                id: 0
+                name: Fido        # <-- taken from the schema's own example
+                tags:
+                  - string
+```
+
 ### Reference preservation
 
 `swagger2openapi` by default preserves almost all `$ref` JSON references in your API definition, and does not dereference
