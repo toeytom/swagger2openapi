@@ -12,6 +12,10 @@
 
 Convert Swagger 2.0 definitions into OpenApi 3.0.x
 
+> **Fork note:** this is a fork of [swagger2openapi](https://github.com/Mermade/oas-kit) adding
+> the `--examples` option - see [Response example generation](#response-example-generation).
+> Install it with `npm i github:toeytom/swagger2openapi`.
+
 The online version of the converter/validator runs on a [Linode](https://www.linode.com/?r=5734be467cc501b23267cf66d451bc339042ddfa) VPS. If you are considering a hosted server, please sign up through this link so we both receive free credit.
 
 Currently tracking [v3.0.x](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md)
