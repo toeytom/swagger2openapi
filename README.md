@@ -21,11 +21,18 @@ The online version of the converter/validator runs on a [Linode](https://www.lin
 Currently tracking [v3.0.x](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md)
 
 ## Installation:
-This is a node.js module, which you can run on the command line. First ensure you have npm installed (tested on version 6.1+), and then install as follows:
+This is a node.js module, which you can run on the command line. First ensure you have npm installed (tested on version 6.1+), and then install this fork from git:
 ```bash
-npm install -g swagger2openapi
+# global CLI
+npm install -g github:toeytom/swagger2openapi
+
+# or as a project dependency
+npm install github:toeytom/swagger2openapi
 ```
-Or, add it to your node.js projects as shown below in option B.
+The upstream registry package (`npm install -g swagger2openapi`) does **not** include the
+`--examples` option; install from git as above to get it.
+
+Then use it on the command line as shown in option A, or from your node.js project as shown in option B.
 
 ## Usage:
 ### A. Command line:
